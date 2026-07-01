@@ -12,8 +12,11 @@
 #include "stm32f4xx_hal.h"
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 // Constants
+#define ANGLE_MIN 0
 #define ANGLE_MAX 180
+
 
 
 // TODO À changer à 320000 quand on installe les servos
@@ -42,7 +45,14 @@
 
 // Structures
 
-typedef struct ServoHandleCreateInfo
+typedef enum _ServoState
+{
+	SERVO_STOPPED,
+	SERVO_MOVING,
+	SERVO_ERROR
+} ServoState;
+
+typedef struct _ServoHandleCreateInfo
 {
 	//Handle to the timer used to generate PWM for the servo
 	TIM_HandleTypeDef* timer;
@@ -52,15 +62,17 @@ typedef struct ServoHandleCreateInfo
 	uint32_t minPulseWidth;
 	//Maximum pulse width accepted (max angle)
 	uint32_t maxPulseWidth;
-	//Maximum angle to be reached by the servo
+	// Minimum angle to be reached by the servo
+	float minAngle;
+	// Maximum angle to be reached by the servo
 	float maxAngle;
-	//Offset angle, used to calibrate the servo in case of misalignment
+	// Offset angle, used to calibrate the servo in case of misalignment
 	float offsetAngle;
-	//Determines in which direction the servo moves
+	// Determines in which direction the servo moves
 	bool inverted;
 } ServoHandleCreateInfo;
 
-typedef struct ServoHandle
+typedef struct _ServoHandle
 {
 	//Handle to the timer used to generate PWM for the servo
 	const TIM_HandleTypeDef* timer;
@@ -70,8 +82,16 @@ typedef struct ServoHandle
 	uint32_t minPulseWidth;
 	//Maximum pulse width accepted (max angle)
 	uint32_t maxPulseWidth;
+	//Determines in which direction the servo moves
+	bool inverted;
 	//Offset angle, used to calibrate the servo in case of misalignment
-	float offset;
+	float offsetAngle;
+	// The pulse count per degree;
+	float pulsePerDegree;
+	// The servo's minimum angle
+	float minAngle;
+	//The servo's maximum angle
+	float maxAngle;
 	//The servo's current angle
 	float angle;
 	//The servo's target angle
@@ -82,14 +102,14 @@ typedef struct ServoHandle
 	float targetSpeed;
 	//The servo's current acceleration (probably won't be used, let's be honest)
 	float acceleration;
-	//Determines in which direction the servo moves
-	bool inverted;
+
+
 } ServoHandle;
 
 void initServoHandle(ServoHandleCreateInfo* createInfo, ServoHandle* handle);
-void setServoAngle0(ServoHandle* servoHandle, float angle);
+void setServoAngled0(ServoHandle* servoHandle, float angle);
 void setServoAngled1(ServoHandle* servoHandle, float angle, float speed);
 void setServoAngled2(ServoHandle* servoHandle, float angle, float speed, float acceleration);
-void updateServo(ServoHandle* servoHandle, uint32_t deltaTime);
+bool updateServo(ServoHandle* servoHandle, uint32_t deltaTime);
 
 #endif /* INC_SERVO_H_ */

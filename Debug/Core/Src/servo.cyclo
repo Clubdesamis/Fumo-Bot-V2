@@ -1,5 +1,5 @@
-../Core/Src/servo.c:10:6:initServoHandle	1
-../Core/Src/servo.c:25:6:setServoAngled0	9
-../Core/Src/servo.c:60:6:setServoAngled1	3
-../Core/Src/servo.c:79:6:setServoAngled2	1
-../Core/Src/servo.c:84:6:updateServo	6
+../Core/Src/servo.c:10:6:servo_initHandle	1
+../Core/Src/servo.c:25:6:servo_setAngled0	9
+../Core/Src/servo.c:62:6:servo_setAngled1	3
+../Core/Src/servo.c:81:6:setServoAngled2	1
+../Core/Src/servo.c:86:6:servo_update	6

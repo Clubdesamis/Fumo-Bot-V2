@@ -11,19 +11,19 @@
 // Variables
 Handles handles;
 
-ServoHandle servoArmRight;
-ServoHandle servoArmLeft;
-ServoHandle servoBounceRight;
-ServoHandle servoBounceLeft;
+servoHandle servoArmRight;
+servoHandle servoArmLeft;
+servoHandle servoBounceRight;
+servoHandle servoBounceLeft;
 
-void initHandles(const Handles* _handles)
+void fumobot_initHandles(const Handles* _handles)
 {
 	handles = *_handles;
 }
 
-void initServos()
+void fumobot_initServos()
 {
-	ServoHandleCreateInfo servoArmRightCreateInfo =
+	servoHandleCreateInfo servoArmRightCreateInfo =
 	{
 		.timer = handles.pwmTimer,
 		.timerChannel = SERVO_ARM_RIGHT_CHANNEL,
@@ -33,7 +33,7 @@ void initServos()
 		.inverted = false //true
 	};
 
-	ServoHandleCreateInfo servoArmLeftCreateInfo =
+	servoHandleCreateInfo servoArmLeftCreateInfo =
 	{
 		.timer = handles.pwmTimer,
 		.timerChannel = SERVO_ARM_LEFT_CHANNEL,
@@ -43,7 +43,7 @@ void initServos()
 		.inverted = false
 	};
 
-	ServoHandleCreateInfo servoBounceRightCreateInfo =
+	servoHandleCreateInfo servoBounceRightCreateInfo =
 	{
 		.timer = handles.pwmTimer,
 		.timerChannel = SERVO_BOUNCE_RIGHT_CHANNEL,
@@ -53,7 +53,7 @@ void initServos()
 		.inverted = false //true
 	};
 
-	ServoHandleCreateInfo servoBounceLeftCreateInfo =
+	servoHandleCreateInfo servoBounceLeftCreateInfo =
 	{
 		.timer = handles.pwmTimer,
 		.timerChannel = SERVO_BOUNCE_LEFT_CHANNEL,
@@ -63,13 +63,13 @@ void initServos()
 		.inverted = false
 	};
 
-	initServoHandle(&servoArmRightCreateInfo, &servoArmRight);
-	initServoHandle(&servoArmLeftCreateInfo, &servoArmLeft);
-	initServoHandle(&servoBounceRightCreateInfo, &servoBounceRight);
-	initServoHandle(&servoBounceLeftCreateInfo, &servoBounceLeft);
+	servo_initHandle(&servoArmRightCreateInfo, &servoArmRight);
+	servo_initHandle(&servoArmLeftCreateInfo, &servoArmLeft);
+	servo_initHandle(&servoBounceRightCreateInfo, &servoBounceRight);
+	servo_initHandle(&servoBounceLeftCreateInfo, &servoBounceLeft);
 }
 
-void mainLoop()
+void fumobot_mainLoop()
 {
 
 
@@ -77,11 +77,12 @@ void mainLoop()
 
 	if(set)
 	{
-		setServoAngled1(&servoArmRight, 20.0, 5.0);
-		//setServoAngled0(&servoArmRight, 90.0);
-		//setServoAngled1(&servoArmLeft, 20.0, 1.0);
-		//setServoAngled1(&servoBounceRight, 20.0, 1.0);
-		//setServoAngled1(&servoBounceLeft, 20.0, 1.0);
+		servo_setAngled0(&servoArmRight, 0.0);
+		servo_setAngled0(&servoArmLeft, 0.0);
+		servo_setAngled0(&servoBounceRight, 0.0);
+		servo_setAngled0(&servoBounceLeft, 0.0);
+
+		servo_setAngled1(&servoArmLeft, 180.0, 60.0);
 
 		set = 0;
 	}
@@ -89,7 +90,13 @@ void mainLoop()
 
 	HAL_Delay(10);
 
-	updateServo(&servoArmRight, 10);
+	if(servo_update(&servoArmLeft, 10))
+	{
+		servo_setAngled0(&servoArmRight, 180.0);
+		//setServoAngled0(&servoArmLeft, 180.0);
+		servo_setAngled0(&servoBounceRight, 180.0);
+		servo_setAngled0(&servoBounceLeft, 180.0);
+	}
 	//updateServo(&servoArmLeft, 10);
 	//updateServo(&servoBounceRight, 10);
 	//updateServo(&servoBounceLeft, 10);

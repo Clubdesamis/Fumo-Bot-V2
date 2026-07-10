@@ -20,9 +20,9 @@
 
 
 // TODO À changer à 320000 quand on installe les servos
-#define PW_MIN 0
+#define PW_MIN 8000//0
 // TODO À changer à 320000 quand on installe les servos
-#define PW_MAX 160000
+#define PW_MAX 40000
 // TODO À changer à 320000 quand on installe les servos
 #define PW_WHOLE PW_MAX - PW_MIN
 
@@ -52,7 +52,7 @@ typedef enum _ServoState
 	SERVO_ERROR
 } ServoState;
 
-typedef struct _ServoHandleCreateInfo
+typedef struct
 {
 	//Handle to the timer used to generate PWM for the servo
 	TIM_HandleTypeDef* timer;
@@ -70,9 +70,9 @@ typedef struct _ServoHandleCreateInfo
 	float offsetAngle;
 	// Determines in which direction the servo moves
 	bool inverted;
-} ServoHandleCreateInfo;
+} servoHandleCreateInfo;
 
-typedef struct _ServoHandle
+typedef struct
 {
 	//Handle to the timer used to generate PWM for the servo
 	const TIM_HandleTypeDef* timer;
@@ -104,12 +104,11 @@ typedef struct _ServoHandle
 	float acceleration;
 
 
-} ServoHandle;
+} servoHandle;
 
-void initServoHandle(ServoHandleCreateInfo* createInfo, ServoHandle* handle);
-void setServoAngled0(ServoHandle* servoHandle, float angle);
-void setServoAngled1(ServoHandle* servoHandle, float angle, float speed);
-void setServoAngled2(ServoHandle* servoHandle, float angle, float speed, float acceleration);
-bool updateServo(ServoHandle* servoHandle, uint32_t deltaTime);
+void servo_initHandle(servoHandleCreateInfo* createInfo, servoHandle* handle);
+void servo_setAngled0(servoHandle* servoHandle, float angle);
+void servo_setAngled1(servoHandle* servoHandle, float angle, float speed);
+bool servo_update(servoHandle* servoHandle, uint32_t deltaTime);
 
 #endif /* INC_SERVO_H_ */

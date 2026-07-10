@@ -7,10 +7,10 @@
 
 #include "servo.h"
 
-void initServoHandle(ServoHandleCreateInfo* createInfo, ServoHandle* handle)
+void servo_initHandle(servoHandleCreateInfo* createInfo, servoHandle* handle)
 {
 	// Making sure the whole struct is set to zero (you never know lmao)
-	memset(handle, 0, sizeof(ServoHandle));
+	memset(handle, 0, sizeof(servoHandle));
 	handle->timer = createInfo->timer;
 	handle->timerChannel = createInfo->timerChannel;
 	handle->minPulseWidth = createInfo->minPulseWidth;
@@ -22,7 +22,7 @@ void initServoHandle(ServoHandleCreateInfo* createInfo, ServoHandle* handle)
 	handle->pulsePerDegree = (createInfo->maxPulseWidth - createInfo->minPulseWidth) / (createInfo->maxAngle - createInfo->minAngle);
 }
 
-void setServoAngled0(ServoHandle* servo, float angle)
+void servo_setAngled0(servoHandle* servo, float angle)
 {
 	uint32_t pulse = 0;
 
@@ -59,7 +59,7 @@ void setServoAngled0(ServoHandle* servo, float angle)
 	__HAL_TIM_SET_COMPARE(servo->timer, servo->timerChannel, pulse);
 }
 
-void setServoAngled1(ServoHandle* servo, float angle, float speed)
+void servo_setAngled1(servoHandle* servo, float angle, float speed)
 {
 	if(angle + servo->offsetAngle > servo->maxAngle)
 	{
@@ -78,12 +78,12 @@ void setServoAngled1(ServoHandle* servo, float angle, float speed)
 
 }
 
-void setServoAngled2(ServoHandle* servoHandle, float angle, float speed, float acceleration)
+void setServoAngled2(servoHandle* servoHandle, float angle, float speed, float acceleration)
 {
 
 }
 
-bool updateServo(ServoHandle* servo, uint32_t deltaTime)
+bool servo_update(servoHandle* servo, uint32_t deltaTime)
 {
 	if(servo->speed != 0.0)
 	{
@@ -96,13 +96,13 @@ bool updateServo(ServoHandle* servo, uint32_t deltaTime)
 		{
 			if(servo->angle - deltaAngle < servo->targetAngle)
 			{
-				setServoAngled0(servo, servo->targetAngle);
+				servo_setAngled0(servo, servo->targetAngle);
 				servo->speed = 0.0;
 				return true;
 			}
 			else
 			{
-				setServoAngled0(servo, servo->angle - deltaAngle);
+				servo_setAngled0(servo, servo->angle - deltaAngle);
 			}
 		}
 		//Going up
@@ -110,13 +110,13 @@ bool updateServo(ServoHandle* servo, uint32_t deltaTime)
 		{
 			if(servo->angle + deltaAngle > servo->targetAngle)
 			{
-				setServoAngled0(servo, servo->targetAngle);
+				servo_setAngled0(servo, servo->targetAngle);
 				servo->speed = 0.0;
 				return true;
 			}
 			else
 			{
-				setServoAngled0(servo, servo->angle + deltaAngle);
+				servo_setAngled0(servo, servo->angle + deltaAngle);
 			}
 		}
 	}

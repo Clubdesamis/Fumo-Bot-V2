@@ -10,6 +10,7 @@
 
 // Includes
 #include "servo.h"
+#include "emote.h"
 
 // Defines
 
@@ -20,11 +21,11 @@ typedef struct HandleStruct
 	TIM_HandleTypeDef* pwmTimer;
 } Handles;
 
-void fumoBotInit();
-void initHandles(const Handles* _handles);
-void initTimers();
-void initServos();
-void initUSB();
-void mainLoop(void);
+void fumobot_init(void);
+void fumobot_initHandles(const Handles* _handles);
+void fumobot_initTimers(void);
+void fumobot_initServos(void);
+void fumobot_initUSB(void);
+void fumobot_mainLoop(void);
 
 #endif /* INC_FUMOBOT_H_ */

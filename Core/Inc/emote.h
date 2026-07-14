@@ -27,8 +27,15 @@ typedef struct
 
 typedef struct
 {
+	servoHandle* handle;
+	uint32_t commandIndex;
+	uint32_t timeToWait;
+} emoteServoContext;
+
+typedef struct
+{
 	uint8_t servoCount;
-	servoHandle** servos;
+	emoteServoContext* servos;
 	uint32_t* currentEmote;
 	emotePlayerState state;
 } emotePlayer;
@@ -60,7 +67,7 @@ typedef uint32_t command;
 
 #define BARRIER(servoId, barrierId) (command) 0 | (uint8_t)COMMAND_BARRIER << 24 | (uint8_t)servoId << 16
 
-#define GET_COMMAND_ID(command) (uint8_t) 0 | (command)command >> 24
+#define GET_COMMAND_ID(command) ((uint8_t) 0 | (command)command >> 24)
 
 #define GET_SERVO_COUNT(command) (uint8_t) 0 | (command)command >> 16
 
@@ -78,9 +85,12 @@ __attribute__((unused)) static int testEmote[] =
 		FINISH(1),			FINISH(2),			FINISH(3),			FINISH(4)
 };
 
-emotePlayer* emote_initPlayer(emotePlayerCreateInfo createInfo);
-void emote_start(emotePlayer* player, uint32_t* emote);
-bool emote_update(emotePlayer* player);
+//static int e = sizeof(testEmote);
+
+emotePlayer* emote_initPlayer(emotePlayerCreateInfo* createInfo);
+void emote_destroyPlayer(emotePlayer* player);
+bool emote_start(emotePlayer* player, uint32_t* emote);
+bool emote_update(emotePlayer* player, uint32_t deltaTime);
 void emote_finish(emotePlayer* player);
 
 #endif /* INC_EMOTE_H_ */

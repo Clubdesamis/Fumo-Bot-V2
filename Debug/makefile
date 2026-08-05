@@ -60,8 +60,8 @@ all: main-build
 main-build: Fumobot\ V2.elf secondary-outputs
 
 # Tool invocations
-Fumobot\ V2.elf Fumobot\ V2.map: $(OBJS) $(USER_OBJS) /home/Club/Documents/Coding/Fumobot\ V2/Fumo-Bot-V2/STM32F411CEUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Fumobot V2.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/Club/Documents/Coding/Fumobot V2/Fumo-Bot-V2/STM32F411CEUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Fumobot V2.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Fumobot\ V2.elf Fumobot\ V2.map: $(OBJS) $(USER_OBJS) /home/club/Documents/Coding/Fumobot\ V2/STM32F411CEUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Fumobot V2.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/club/Documents/Coding/Fumobot V2/STM32F411CEUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Fumobot V2.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

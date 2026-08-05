@@ -24,7 +24,7 @@ typedef struct HandleStruct
 void fumobot_init(void);
 void fumobot_initHandles(const Handles* _handles);
 void fumobot_initTimers(void);
-void fumobot_initServos(void);
+void fumobot_init(void);
 void fumobot_initUSB(void);
 void fumobot_mainLoop(void);
 

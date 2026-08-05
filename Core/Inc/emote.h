@@ -16,8 +16,17 @@ typedef enum
 {
 	STATE_STOPPED,
 	STATE_PLAYING,
+	STATE_WAITING,
 	STATE_ERROR
-} emotePlayerState;
+} state;
+
+typedef enum
+{
+	ARM_RIGHT,
+	ARM_LEFT,
+	BOUNCE_RIGHT,
+	BOUNCE_LEFT
+} servoIdentifiers;
 
 typedef struct
 {
@@ -28,8 +37,9 @@ typedef struct
 typedef struct
 {
 	servoHandle* handle;
-	uint32_t commandIndex;
+	int commandIndex;
 	uint32_t timeToWait;
+	state state;
 } emoteServoContext;
 
 typedef struct
@@ -37,7 +47,8 @@ typedef struct
 	uint8_t servoCount;
 	emoteServoContext* servos;
 	uint32_t* currentEmote;
-	emotePlayerState state;
+	uint32_t currentEmoteSize;
+	state state;
 } emotePlayer;
 
 typedef enum
@@ -61,35 +72,42 @@ typedef uint32_t command;
 
 #define SET_ANGLE_D0(servoId, angle) (command) 0 | (uint8_t)COMMAND_SET_ANGLE_D0 << 24 | (uint8_t)servoId << 16 | (uint8_t)angle << 8
 
-#define SET_ANGLE_D1(servoId, angle, speed) (command) 0 | (uint8_t)COMMAND_SET_ANGLE_D1 << 24 | (uint8_t)servoId << 16 | (uint8_t)angle << 8 | (uint8_t)speed
+#define SET_ANGLE_D1(servoId, angle, speed) (command) 0 | (uint8_t)COMMAND_SET_ANGLE_D1 << 24 | (uint8_t)servoId << 16 | (uint8_t)angle << 8 | (uint8_t)speed << 0
 
 #define DELAY(servoId, time) (command) 0 | (uint8_t)COMMAND_DELAY << 24 | (uint8_t)servoId << 16 | (uint16_t)time << 8
 
-#define BARRIER(servoId, barrierId) (command) 0 | (uint8_t)COMMAND_BARRIER << 24 | (uint8_t)servoId << 16
+#define BARRIER(servoId, barrierId) (command) 0 | (uint8_t)COMMAND_BARRIER << 24 | (uint8_t)servoId << 16 | (uint8_t)barrierId << 8
 
-#define GET_COMMAND_ID(command) ((uint8_t) 0 | (command)command >> 24)
+#define GET_COMMAND_ID(_command) (uint8_t)(0 | (command)_command >> 24)
 
-#define GET_SERVO_COUNT(command) (uint8_t) 0 | (command)command >> 16
+#define GET_SERVO_COUNT(_command) (uint8_t)(0 | (command)_command >> 16)
 
-#define GET_SERVO_ID(command) (uint8_t) 0 | (command)command >> 16
+#define GET_SERVO_ID(_command) (uint8_t)(0 | (command)_command >> 16)
 
-#define GET_ANGLE(command) (uint8_t) 0 | (command)command >> 8
+#define GET_ANGLE(_command) (uint8_t)(0 | (command)_command >> 8)
+
+#define GET_SPEED(_command) (uint8_t)(0 | (command)_command >> 0)
+
+#define GET_TIME_TO_WAIT(_command) (uint16_t)(0 | (command)_command >> 8)
+
+#define GET_BARRIER_ID(_command) (uint8_t)(0 | (command)_command >> 8)
 
 
-__attribute__((unused)) static int testEmote[] =
+__attribute__((unused)) static uint32_t testEmote[] =
 {
 		HEADER(4),
-		START(1),			START(2),			START(3),			START(4),
-		SET_ANGLE_D0(1, 0),	SET_ANGLE_D0(2, 0),	SET_ANGLE_D0(3, 0),	SET_ANGLE_D0(4, 0),
-		DELAY(1, 1000),		DELAY(2, 1000),		DELAY(3, 1000),		DELAY(4, 1000),
-		FINISH(1),			FINISH(2),			FINISH(3),			FINISH(4)
+		START(ARM_RIGHT),			START(ARM_LEFT),			START(BOUNCE_RIGHT),			START(BOUNCE_LEFT),
+		SET_ANGLE_D0(ARM_RIGHT, 0),	SET_ANGLE_D0(ARM_LEFT, 0),	SET_ANGLE_D0(BOUNCE_RIGHT, 0),	SET_ANGLE_D0(BOUNCE_LEFT, 0),
+		DELAY(ARM_RIGHT, 1000),		DELAY(ARM_LEFT, 1000),		DELAY(BOUNCE_RIGHT, 1000),		DELAY(BOUNCE_LEFT, 1000),
+		SET_ANGLE_D0(ARM_RIGHT, 180),	SET_ANGLE_D0(ARM_LEFT, 180),	SET_ANGLE_D0(BOUNCE_RIGHT, 180),	SET_ANGLE_D0(BOUNCE_LEFT, 180),
+		FINISH(ARM_RIGHT),			FINISH(ARM_LEFT),			FINISH(BOUNCE_RIGHT),			FINISH(BOUNCE_LEFT)
 };
 
 //static int e = sizeof(testEmote);
 
 emotePlayer* emote_initPlayer(emotePlayerCreateInfo* createInfo);
 void emote_destroyPlayer(emotePlayer* player);
-bool emote_start(emotePlayer* player, uint32_t* emote);
+bool emote_start(emotePlayer* player, uint32_t* emote, uint32_t emoteSize);
 bool emote_update(emotePlayer* player, uint32_t deltaTime);
 void emote_finish(emotePlayer* player);
 

@@ -89,30 +89,20 @@ void fumobot_init()
 	player = emote_initPlayer(&playerCreateInfo);
 }
 
+uint16_t readADC()
+{
+	HAL_ADC_PollForConversion(handles.sensorAdc, 1000);
+	uint16_t readValue = HAL_ADC_GetValue(handles.sensorAdc);
+	HAL_ADC_Start(handles.sensorAdc);
+
+	return readValue;
+}
+
 void fumobot_mainLoop()
 {
 
-	/*
-	static bool set = true;
-
-	if(set)
-	{
-		servo_setAngled0(&servoArmRight, 0);
-		HAL_Delay(350);
-		set = false;
-		servo_setAngled1(&servoArmRight, 180, 20);
-	}
-	else
-	{
-		if(servo_update(&servoArmRight, 10))
-		{
-			servo_setAngled0(&servoArmRight, 0);
-		}
-	}
-	*/
-
-
-
+	uint16_t readValue = readADC();
+	int e = 2;
 
 
 	static bool set = true;
@@ -126,7 +116,6 @@ void fumobot_mainLoop()
 	HAL_Delay(10);
 
 	bool bs = emote_update(player, 10);
-
 
 
 }

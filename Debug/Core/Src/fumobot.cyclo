@@ -1,3 +1,4 @@
 ../Core/Src/fumobot.c:22:6:fumobot_initHandles	1
 ../Core/Src/fumobot.c:27:6:fumobot_init	1
-../Core/Src/fumobot.c:92:6:fumobot_mainLoop	2
+../Core/Src/fumobot.c:92:10:readADC	1
+../Core/Src/fumobot.c:101:6:fumobot_mainLoop	2

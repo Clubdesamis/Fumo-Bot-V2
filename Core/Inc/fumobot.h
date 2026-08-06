@@ -18,10 +18,16 @@
 #define BOUNCE_SERVO_ANGLE_MIN 30
 #define BOUNCE_SERVO_ANGLE_MAX 150
 
+#define SERVO_ARM_RIGHT_CHANNEL TIM_CHANNEL_2
+#define SERVO_ARM_LEFT_CHANNEL TIM_CHANNEL_3
+#define SERVO_BOUNCE_RIGHT_CHANNEL TIM_CHANNEL_4
+#define SERVO_BOUNCE_LEFT_CHANNEL TIM_CHANNEL_1
+
 // Typedefs
 
 typedef struct HandleStruct
 {
+	ADC_HandleTypeDef* sensorAdc;
 	TIM_HandleTypeDef* pwmTimer;
 } Handles;
 

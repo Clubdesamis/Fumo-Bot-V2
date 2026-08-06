@@ -1,6 +1,6 @@
 ../Core/Src/emote.c:4:14:emote_initPlayer	24	static
 ../Core/Src/emote.c:22:6:emote_destroyPlayer	16	static
 ../Core/Src/emote.c:28:6:emote_start	32	static
-../Core/Src/emote.c:59:6:goToNextCommand	24	static
-../Core/Src/emote.c:77:6:emote_update	40	static
-../Core/Src/emote.c:189:6:emote_finish	16	static
+../Core/Src/emote.c:60:6:goToNextCommand	32	static
+../Core/Src/emote.c:79:6:emote_update	56	static
+../Core/Src/emote.c:211:6:emote_finish	16	static

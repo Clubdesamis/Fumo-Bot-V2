@@ -1,3 +1,3 @@
 ../Core/Src/fumobot.c:22:6:fumobot_initHandles	16	static
 ../Core/Src/fumobot.c:27:6:fumobot_init	144	static
-../Core/Src/fumobot.c:88:6:fumobot_mainLoop	8	static
+../Core/Src/fumobot.c:92:6:fumobot_mainLoop	16	static

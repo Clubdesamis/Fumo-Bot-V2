@@ -19,7 +19,7 @@ void servo_initHandle(servoHandleCreateInfo* createInfo, servoHandle* handle)
 	handle->maxAngle = createInfo->maxAngle;
 	handle->offsetAngle = createInfo->offsetAngle;
 	handle->inverted = createInfo-> inverted;
-	handle->pulsePerDegree = (createInfo->maxPulseWidth - createInfo->minPulseWidth) / (createInfo->maxAngle - createInfo->minAngle);
+	handle->pulsePerDegree = (createInfo->maxPulseWidth - createInfo->minPulseWidth) / (ANGLE_MAX - ANGLE_MIN);
 }
 
 void servo_setAngled0(servoHandle* servo, float angle)
@@ -30,9 +30,9 @@ void servo_setAngled0(servoHandle* servo, float angle)
 	{
 		angle = servo->maxAngle;
 	}
-	else if(angle < ANGLE_MIN)
+	else if(angle < servo->minAngle)
 	{
-		angle = ANGLE_MIN;
+		angle = servo->minAngle;
 	}
 
 	servo->angle = angle;
@@ -65,9 +65,9 @@ void servo_setAngled1(servoHandle* servo, float angle, float speed)
 	{
 		servo->targetAngle = servo->maxAngle;
 	}
-	else if(angle + servo->offsetAngle < 0)
+	else if(angle + servo->offsetAngle < servo->minAngle)
 	{
-		servo->targetAngle = 0;
+		servo->targetAngle = servo->minAngle;
 	}
 	else
 	{
@@ -94,7 +94,7 @@ bool servo_update(servoHandle* servo, uint32_t deltaTime)
 		//Going down
 		if(servo->angle > servo->targetAngle)
 		{
-			if(servo->angle - deltaAngle < servo->targetAngle)
+			if(servo->angle - deltaAngle <= servo->targetAngle)
 			{
 				servo_setAngled0(servo, servo->targetAngle);
 				servo->speed = 0.0;
@@ -108,7 +108,7 @@ bool servo_update(servoHandle* servo, uint32_t deltaTime)
 		//Going up
 		else if(servo->angle < servo->targetAngle)
 		{
-			if(servo->angle + deltaAngle > servo->targetAngle)
+			if(servo->angle + deltaAngle >= servo->targetAngle)
 			{
 				servo_setAngled0(servo, servo->targetAngle);
 				servo->speed = 0.0;

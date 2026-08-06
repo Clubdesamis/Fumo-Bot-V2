@@ -32,7 +32,8 @@ void fumobot_init()
 		.timerChannel = SERVO_ARM_RIGHT_CHANNEL,
 		.minPulseWidth = PW_MIN,
 		.maxPulseWidth = PW_MAX,
-		.maxAngle = 120,//ANGLE_MAX,
+		.minAngle = ARM_SERVO_ANGLE_MIN,
+		.maxAngle = ARM_SERVO_ANGLE_MAX,
 		.inverted = true
 	};
 
@@ -42,7 +43,8 @@ void fumobot_init()
 		.timerChannel = SERVO_ARM_LEFT_CHANNEL,
 		.minPulseWidth = PW_MIN,
 		.maxPulseWidth = PW_MAX,
-		.maxAngle = 120,//ANGLE_MAX,
+		.minAngle = ARM_SERVO_ANGLE_MIN,
+		.maxAngle = ARM_SERVO_ANGLE_MAX,
 		.inverted = false
 	};
 
@@ -52,7 +54,8 @@ void fumobot_init()
 		.timerChannel = SERVO_BOUNCE_RIGHT_CHANNEL,
 		.minPulseWidth = PW_MIN,
 		.maxPulseWidth = PW_MAX,
-		.maxAngle = ANGLE_MAX,
+		.minAngle = BOUNCE_SERVO_ANGLE_MIN,
+		.maxAngle = BOUNCE_SERVO_ANGLE_MAX,
 		.inverted = true
 	};
 
@@ -62,7 +65,8 @@ void fumobot_init()
 		.timerChannel = SERVO_BOUNCE_LEFT_CHANNEL,
 		.minPulseWidth = PW_MIN,
 		.maxPulseWidth = PW_MAX,
-		.maxAngle = ANGLE_MAX,
+		.minAngle = BOUNCE_SERVO_ANGLE_MIN,
+		.maxAngle = BOUNCE_SERVO_ANGLE_MAX,
 		.inverted = false
 	};
 
@@ -88,52 +92,41 @@ void fumobot_init()
 void fumobot_mainLoop()
 {
 
+	/*
+	static bool set = true;
 
-	servo_setAngled0(&servoArmRight, 0.0);
-	servo_setAngled0(&servoArmLeft, 0.0);
-	//servo_setAngled0(&servoBounceRight, 0.0);
-	//servo_setAngled0(&servoBounceLeft, 0.0);
-	HAL_Delay(800);
-	servo_setAngled0(&servoArmRight, 90.0);
-	servo_setAngled0(&servoArmLeft, 90.0);
-	//servo_setAngled0(&servoBounceRight, 90.0);
-	//servo_setAngled0(&servoBounceLeft, 90.0);
-	HAL_Delay(800);
-	servo_setAngled0(&servoArmRight, 180.0);
-	servo_setAngled0(&servoArmLeft, 180.0);
-	//servo_setAngled0(&servoBounceRight, 180.0);
-	//servo_setAngled0(&servoBounceLeft, 180.0);
-	HAL_Delay(800);
-
-
-
-
-
-		//servo_setAngled1(&servoArmLeft, 180.0, 10.0);
-
-
-		//emote_start(player, testEmote, sizeof(testEmote));
+	if(set)
+	{
+		servo_setAngled0(&servoArmRight, 0);
+		HAL_Delay(350);
+		set = false;
+		servo_setAngled1(&servoArmRight, 180, 20);
+	}
+	else
+	{
+		if(servo_update(&servoArmRight, 10))
+		{
+			servo_setAngled0(&servoArmRight, 0);
+		}
+	}
+	*/
 
 
 
-	//servo_setAngled0(&servoArmRight, 0.0);
-	//servo_setAngled0(&servoArmLeft, 0.0);
-	//servo_setAngled0(&servoBounceRight, 0.0);
-	//servo_setAngled0(&servoBounceLeft, 0.0);
 
+
+	static bool set = true;
+
+	if(set)
+	{
+		emote_start(player, testEmote, sizeof(testEmote));
+		set = false;
+	}
 
 	HAL_Delay(10);
 
-	//if(servo_update(&servoArmLeft, 10))
-	//{
-
-		//servo_setAngled0(&servoArmRight, 180.0);
-		//servo_setAngled0(&servoArmLeft, 180.0);
-		//servo_setAngled0(&servoBounceRight, 180.0);
-		//servo_setAngled0(&servoBounceLeft, 180.0);
+	bool bs = emote_update(player, 10);
 
 
-		//emote_update(player, 10);
-	//}
 
 }

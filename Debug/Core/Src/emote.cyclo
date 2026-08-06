@@ -1,6 +1,6 @@
 ../Core/Src/emote.c:4:14:emote_initPlayer	2
 ../Core/Src/emote.c:22:6:emote_destroyPlayer	1
 ../Core/Src/emote.c:28:6:emote_start	7
-../Core/Src/emote.c:59:6:goToNextCommand	3
-../Core/Src/emote.c:77:6:emote_update	22
-../Core/Src/emote.c:189:6:emote_finish	1
+../Core/Src/emote.c:60:6:goToNextCommand	3
+../Core/Src/emote.c:79:6:emote_update	25
+../Core/Src/emote.c:211:6:emote_finish	1

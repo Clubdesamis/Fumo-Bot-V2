@@ -52,6 +52,7 @@ bool emote_start(emotePlayer* player, uint32_t* emote, uint32_t emoteSize)
 	}
 
 	player->currentEmoteSize = emoteSize;
+	player->currentEmote = emote;
 	player->state = STATE_PLAYING;
 	return true;
 }
@@ -61,7 +62,8 @@ void goToNextCommand(uint8_t servoID, emotePlayer* player)
 	uint32_t currentIndex = player->servos[servoID].commandIndex;
 	for(uint32_t i = currentIndex + 1; i < player->currentEmoteSize; i++)
 	{
-		if(GET_SERVO_ID(player->currentEmote[i]) == servoID)
+		uint8_t servoId = GET_SERVO_ID(player->currentEmote[i]);
+		if(servoId == servoID)
 		{
 			player->servos[servoID].timeToWait = 0;
 			player->servos[servoID].state = STATE_PLAYING;
@@ -76,6 +78,7 @@ void goToNextCommand(uint8_t servoID, emotePlayer* player)
 
 bool emote_update(emotePlayer* player, uint32_t deltaTime)
 {
+	bool breakLoop = false;
 	for(uint32_t servoIndex = 0; servoIndex < player->servoCount; servoIndex++)
 	{
 		command currentCommand = player->currentEmote[player->servos[servoIndex].commandIndex];
@@ -113,6 +116,7 @@ bool emote_update(emotePlayer* player, uint32_t deltaTime)
 				{
 					if(servo_update(player->servos[servoIndex].handle, deltaTime))
 					{
+						player->servos[servoIndex].state = STATE_PLAYING;
 						goToNextCommand(servoIndex, player);
 					}
 				}
@@ -162,7 +166,7 @@ bool emote_update(emotePlayer* player, uint32_t deltaTime)
 						uint8_t commandID = GET_COMMAND_ID(player->currentEmote[player->servos[i].commandIndex]);
 						uint8_t barrierID = GET_BARRIER_ID(player->currentEmote[player->servos[i].commandIndex]);
 
-						if(commandID != COMMAND_BARRIER && GET_BARRIER_ID(currentCommand) != barrierID)
+						if(commandID != COMMAND_BARRIER || GET_BARRIER_ID(currentCommand) != barrierID)
 						{
 							barrierFinished = false;
 						}
@@ -172,8 +176,11 @@ bool emote_update(emotePlayer* player, uint32_t deltaTime)
 					{
 						for(int j = 0; j < player->servoCount; j++)
 						{
+							player->servos->state = STATE_PLAYING;
 							goToNextCommand(j, player);
 						}
+
+						breakLoop = true;
 					}
 				}
 				else
@@ -182,8 +189,23 @@ bool emote_update(emotePlayer* player, uint32_t deltaTime)
 				}
 			break;
 		}
+
+		if(breakLoop)
+		{
+			break;
+		}
 	}
-	return false;
+
+	bool finished = true;
+	for(int i = 0; i < player->servoCount; i++)
+	{
+		if(player->servos[i].state != STATE_STOPPED)
+		{
+			finished = false;
+		}
+	}
+
+	return finished;
 }
 
 void emote_finish(emotePlayer* player)

@@ -13,6 +13,10 @@
 #include "emote.h"
 
 // Defines
+#define ARM_SERVO_ANGLE_MIN 30
+#define ARM_SERVO_ANGLE_MAX 150
+#define BOUNCE_SERVO_ANGLE_MIN 30
+#define BOUNCE_SERVO_ANGLE_MAX 150
 
 // Typedefs
 

@@ -119,6 +119,10 @@ bool servo_update(servoHandle* servo, uint32_t deltaTime)
 				servo_setAngled0(servo, servo->angle + deltaAngle);
 			}
 		}
+		else
+		{
+			return true;
+		}
 	}
 
 	return false;

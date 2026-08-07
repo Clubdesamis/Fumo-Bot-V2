@@ -19,6 +19,9 @@ servoHandle* servos[4];
 
 emotePlayer* player;
 
+bool emotePlaying = false;
+int32_t emoteCooldown;
+
 void fumobot_initHandles(const Handles* _handles)
 {
 	handles = *_handles;
@@ -87,6 +90,11 @@ void fumobot_init()
 	};
 
 	player = emote_initPlayer(&playerCreateInfo);
+
+	servo_setAngled0(&servoArmRight, 90);
+	servo_setAngled0(&servoArmLeft, 90);
+	servo_setAngled0(&servoBounceRight, 90);
+	servo_setAngled0(&servoBounceLeft, 90);
 }
 
 uint16_t readADC()
@@ -98,24 +106,41 @@ uint16_t readADC()
 	return readValue;
 }
 
-void fumobot_mainLoop()
+void fumobot_mainLoop(uint32_t deltaTime)
 {
-
 	uint16_t readValue = readADC();
-	int e = 2;
 
-
-	static bool set = true;
-
-	if(set)
+	if(emotePlaying)
 	{
-		emote_start(player, testEmote, sizeof(testEmote));
-		set = false;
+		if(emote_update(player, deltaTime))
+		{
+			emotePlaying = false;
+			emoteCooldown = EMOTE_COOLDOWN_MS;
+		}
+	}
+	else
+	{
+		if(emoteCooldown > 0)
+		{
+			if(emoteCooldown - deltaTime <= 0)
+			{
+				emoteCooldown = 0;
+			}
+			else
+			{
+				emoteCooldown -= deltaTime;
+			}
+		}
+		else
+		{
+			if(readValue >= SENSOR_CLOSE_THRESHOLD)
+			{
+				uint32_t randomEmoteIndex = readValue % (sizeof(emotePool) / sizeof(uint32_t*));
+				emote_start(player, emotePool[randomEmoteIndex], emotePoolSizes[randomEmoteIndex]);
+				emotePlaying = true;
+			}
+		}
 	}
 
-	HAL_Delay(10);
-
-	bool bs = emote_update(player, 10);
-
-
+	HAL_Delay(DELAY_TIME_MS);
 }

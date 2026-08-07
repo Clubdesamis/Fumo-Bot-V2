@@ -1,4 +1,4 @@
-../Core/Src/fumobot.c:22:6:fumobot_initHandles	16	static
-../Core/Src/fumobot.c:27:6:fumobot_init	144	static
-../Core/Src/fumobot.c:92:10:readADC	16	static
-../Core/Src/fumobot.c:101:6:fumobot_mainLoop	24	static
+../Core/Src/fumobot.c:25:6:fumobot_initHandles	16	static
+../Core/Src/fumobot.c:30:6:fumobot_init	144	static
+../Core/Src/fumobot.c:100:10:readADC	16	static
+../Core/Src/fumobot.c:109:6:fumobot_mainLoop	24	static
